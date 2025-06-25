@@ -1,45 +1,58 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { HapticTab } from "@/components/HapticTab";
+import { MCIcons } from "@/components/ui/MCIcons";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { Tabs } from "expo-router";
+import React from "react";
+import { Platform } from "react-native";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const getIconName = (route: string, focused: boolean) => {
+  switch (route) {
+    case "home":
+      return focused ? "home" : "home-outline";
+    case "orders":
+      return focused ? "shopping" : "shopping-outline";
+    case "profile":
+      return focused ? "account" : "account-outline";
+    default:
+      return "circle";
+  }
+};
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      screenOptions={({ route }) => ({
+        // tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].text,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
+        // tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+            position: "absolute",
+            backgroundColor: Colors[colorScheme ?? "light"].background,
+            borderTopWidth: 0,
           },
-          default: {},
+          default: {
+            backgroundColor: Colors[colorScheme ?? "light"].background,
+            borderTopWidth: 0,
+          },
         }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+        tabBarIcon: ({ color, size, focused }) => (
+          <MCIcons
+            name={getIconName(route.name, focused)}
+            size={size}
+            color={color}
+          />
+        ),
+      })}
+    >
+      <Tabs.Screen name="home" options={{ title: "Início" }} />
+      <Tabs.Screen name="orders" options={{ title: "Pedidos" }} />
+      <Tabs.Screen name="profile" options={{ title: "Perfil" }} />
     </Tabs>
   );
 }
