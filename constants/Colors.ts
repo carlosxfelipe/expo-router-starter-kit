@@ -1,3 +1,11 @@
+/*
+Exemplo de uso:
+
+useThemeColor({}, "text");        // OK
+useThemeColor({}, "background");  // OK
+useThemeColor({}, "status");      // ERRO - usar useStatusColor
+*/
+
 import { MaterialShades } from "./MaterialShades";
 
 const tintColorLight = MaterialShades.blue[700];
