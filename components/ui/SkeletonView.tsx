@@ -12,6 +12,10 @@ interface SkeletonViewProps {
   height?: DimensionValue;
   borderRadius?: number;
   isDarkMode?: boolean;
+  lightBaseColor?: string;
+  lightHighlightColor?: string;
+  darkBaseColor?: string;
+  darkHighlightColor?: string;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -20,6 +24,10 @@ export const SkeletonView = ({
   height = 100,
   borderRadius = 8,
   isDarkMode = false,
+  lightBaseColor = "#e0e0e0",
+  lightHighlightColor = "#f5f5f5",
+  darkBaseColor = "#333",
+  darkHighlightColor = "#555",
   style,
 }: SkeletonViewProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -41,8 +49,8 @@ export const SkeletonView = ({
     ).start();
   }, [fadeAnim]);
 
-  const baseColor = isDarkMode ? "#333" : "#e0e0e0";
-  const highlightColor = isDarkMode ? "#555" : "#f5f5f5";
+  const baseColor = isDarkMode ? darkBaseColor : lightBaseColor;
+  const highlightColor = isDarkMode ? darkHighlightColor : lightHighlightColor;
 
   return (
     <View
