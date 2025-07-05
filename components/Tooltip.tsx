@@ -13,12 +13,22 @@ interface TooltipProps {
   message: string;
   children: React.ReactElement<any>;
   placement?: "top" | "bottom" | "left" | "right";
+  isDarkMode?: boolean;
+  textColor?: string;
+  textColorDark?: string;
+  backgroundColor?: string;
+  backgroundColorDark?: string;
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
   message,
   children,
   placement = "bottom",
+  isDarkMode = false,
+  textColor = "#fff",
+  textColorDark = "#333",
+  backgroundColor = "#333",
+  backgroundColorDark = "#fff",
 }) => {
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState<LayoutRectangle>({
@@ -112,13 +122,29 @@ export const Tooltip: React.FC<TooltipProps> = ({
           <View style={[StyleSheet.absoluteFill, styles.backdrop]}>
             <View style={[styles.tooltipContainer, getTooltipStyle()]}>
               <View
-                style={styles.tooltipBox}
+                style={[
+                  styles.tooltipBox,
+                  {
+                    backgroundColor: isDarkMode
+                      ? backgroundColorDark
+                      : backgroundColor,
+                  },
+                ]}
                 onLayout={(event) => {
                   const { width, height } = event.nativeEvent.layout;
                   setTooltipSize({ width, height });
                 }}
               >
-                <Text style={styles.tooltipText}>{message}</Text>
+                <Text
+                  style={[
+                    styles.tooltipText,
+                    {
+                      color: isDarkMode ? textColorDark : textColor,
+                    },
+                  ]}
+                >
+                  {message}
+                </Text>
               </View>
               <View style={[styles.tooltipArrowBase, getArrowStyle()]} />
             </View>
@@ -133,11 +159,9 @@ const styles = StyleSheet.create({
   tooltipBox: {
     maxWidth: 250,
     padding: 10,
-    backgroundColor: "#333",
     borderRadius: 8,
   },
   tooltipText: {
-    color: "#fff",
     fontSize: 14,
   },
   backdrop: {
@@ -160,7 +184,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 8,
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
-    borderBottomColor: "#333",
+    // borderBottomColor: "white",
   },
   arrowBottom: {
     bottom: -8,
@@ -171,7 +195,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
-    borderTopColor: "#333",
+    // borderTopColor: "white",
   },
   arrowLeft: {
     left: -8,
@@ -182,7 +206,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 8,
     borderTopColor: "transparent",
     borderBottomColor: "transparent",
-    borderRightColor: "#333",
+    // borderRightColor: "white",
   },
   arrowRight: {
     right: -8,
@@ -193,6 +217,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 8,
     borderTopColor: "transparent",
     borderBottomColor: "transparent",
-    borderLeftColor: "#333",
+    // borderLeftColor: "white",
   },
 });
