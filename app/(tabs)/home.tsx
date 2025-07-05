@@ -1,5 +1,6 @@
 import { CircleSkeletonRow } from "@/components/demo/CircleSkeletonRow";
 import { FeaturedProducts } from "@/components/demo/FeaturedProductsSkeleton";
+import { TooltipDemo } from "@/components/demo/TooltipDemo";
 import { MaxWidthLayout } from "@/components/layout/MaxWidthLayout";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -17,11 +18,13 @@ export default function HomeScreen() {
         <View style={{ marginTop: 16 }}>{/* <BannerCarousel /> */}</View>
         <View style={{ paddingHorizontal: 16 }}>
           <ThemedText>Tela de Início</ThemedText>
+          <TooltipDemo message="Primeiro tooltip" />
           <FeaturedProducts isDarkMode={isDarkMode} />
           <CircleSkeletonRow count={5} isDarkMode={isDarkMode} />
           {/* <FeaturedProducts /> */}
           {/* <ProductList title="Popular Products" products={popularProducts} /> */}
           {/* <ProductList title="New Arrivals" products={newArrivals} /> */}
+          <TooltipDemo message="Segundo tooltip" />
         </View>
       </ThemedView>
     </MaxWidthLayout>
