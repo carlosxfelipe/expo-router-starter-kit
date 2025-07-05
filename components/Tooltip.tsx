@@ -4,9 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
-  UIManager,
   View,
-  findNodeHandle,
 } from "react-native";
 
 interface TooltipProps {
@@ -25,13 +23,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const childRef = useRef<View>(null);
 
   const showTooltip = () => {
-    const handle = findNodeHandle(childRef.current);
-    if (handle) {
-      UIManager.measureInWindow(handle, (x, y, width, height) => {
-        setPosition({ x, y: y + height, width });
-        setVisible(true);
-      });
-    }
+    childRef.current?.measureInWindow((x, y, width, height) => {
+      setPosition({ x, y: y + height, width });
+      setVisible(true);
+    });
   };
 
   return (
