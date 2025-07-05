@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import {
+  Dimensions,
   LayoutRectangle,
   Modal,
   StyleSheet,
@@ -29,6 +30,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const [tooltipSize, setTooltipSize] = useState({ width: 0, height: 0 });
 
   const childRef = useRef<View>(null);
+  const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
   const showTooltip = () => {
     childRef.current?.measureInWindow((x, y, width, height) => {
@@ -42,30 +44,39 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const getTooltipStyle = () => {
     const { width: tooltipWidth, height: tooltipHeight } = tooltipSize;
 
+    let top = 0;
+    let left = 0;
+
     switch (placement) {
       case "top":
-        return {
-          left: position.x + position.width / 2 - tooltipWidth / 2,
-          top: position.y - tooltipHeight - MARGIN,
-        };
+        top = position.y - tooltipHeight - MARGIN;
+        left = position.x + position.width / 2 - tooltipWidth / 2;
+        break;
       case "bottom":
-        return {
-          left: position.x + position.width / 2 - tooltipWidth / 2,
-          top: position.y + position.height + MARGIN,
-        };
+        top = position.y + position.height + MARGIN;
+        left = position.x + position.width / 2 - tooltipWidth / 2;
+        break;
       case "left":
-        return {
-          left: position.x - tooltipWidth - MARGIN,
-          top: position.y + position.height / 2 - tooltipHeight / 2,
-        };
+        top = position.y + position.height / 2 - tooltipHeight / 2;
+        left = position.x - tooltipWidth - MARGIN;
+        break;
       case "right":
-        return {
-          left: position.x + position.width + MARGIN,
-          top: position.y + position.height / 2 - tooltipHeight / 2,
-        };
-      default:
-        return {};
+        top = position.y + position.height / 2 - tooltipHeight / 2;
+        left = position.x + position.width + MARGIN;
+        break;
     }
+
+    // Evitar que ultrapasse as bordas da tela
+    top = Math.max(
+      MARGIN,
+      Math.min(screenHeight - tooltipHeight - MARGIN, top)
+    );
+    left = Math.max(
+      MARGIN,
+      Math.min(screenWidth - tooltipWidth - MARGIN, left)
+    );
+
+    return { top, left };
   };
 
   const getArrowStyle = () => {

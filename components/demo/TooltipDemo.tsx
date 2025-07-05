@@ -6,15 +6,16 @@ import { MCIcons } from "../ui/MCIcons";
 
 interface Props {
   message: string;
+  placement?: "top" | "bottom" | "left" | "right";
 }
 
-export const TooltipDemo: React.FC<Props> = ({ message }) => {
+export const TooltipDemo: React.FC<Props> = ({ message, placement }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
 
   return (
     <View style={styles.container}>
-      <Tooltip message={message}>
+      <Tooltip message={message} placement={placement}>
         <Pressable style={styles.helpIcon}>
           <ThemedText style={styles.text}>Demonstração de Tooltip</ThemedText>
           <MCIcons

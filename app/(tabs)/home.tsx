@@ -18,13 +18,13 @@ export default function HomeScreen() {
         <View style={{ marginTop: 16 }}>{/* <BannerCarousel /> */}</View>
         <View style={{ paddingHorizontal: 16 }}>
           <ThemedText>Tela de Início</ThemedText>
-          <TooltipDemo message="Primeiro tooltip" />
+          <TooltipDemo message="Primeiro tooltip" placement="top" />
           <FeaturedProducts isDarkMode={isDarkMode} />
           <CircleSkeletonRow count={5} isDarkMode={isDarkMode} />
           {/* <FeaturedProducts /> */}
           {/* <ProductList title="Popular Products" products={popularProducts} /> */}
           {/* <ProductList title="New Arrivals" products={newArrivals} /> */}
-          <TooltipDemo message="Segundo tooltip" />
+          <TooltipDemo message="Segundo tooltip" placement="bottom" />
         </View>
       </ThemedView>
     </MaxWidthLayout>
