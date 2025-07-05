@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import {
+  LayoutRectangle,
   Modal,
   StyleSheet,
   Text,
@@ -19,14 +20,67 @@ export const Tooltip: React.FC<TooltipProps> = ({
   placement = "bottom",
 }) => {
   const [visible, setVisible] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0, width: 0 });
+  const [position, setPosition] = useState<LayoutRectangle>({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
+  const [tooltipSize, setTooltipSize] = useState({ width: 0, height: 0 });
+
   const childRef = useRef<View>(null);
 
   const showTooltip = () => {
     childRef.current?.measureInWindow((x, y, width, height) => {
-      setPosition({ x, y: y + height, width });
+      setPosition({ x, y, width, height });
       setVisible(true);
     });
+  };
+
+  const MARGIN = 8;
+
+  const getTooltipStyle = () => {
+    const { width: tooltipWidth, height: tooltipHeight } = tooltipSize;
+
+    switch (placement) {
+      case "top":
+        return {
+          left: position.x + position.width / 2 - tooltipWidth / 2,
+          top: position.y - tooltipHeight - MARGIN,
+        };
+      case "bottom":
+        return {
+          left: position.x + position.width / 2 - tooltipWidth / 2,
+          top: position.y + position.height + MARGIN,
+        };
+      case "left":
+        return {
+          left: position.x - tooltipWidth - MARGIN,
+          top: position.y + position.height / 2 - tooltipHeight / 2,
+        };
+      case "right":
+        return {
+          left: position.x + position.width + MARGIN,
+          top: position.y + position.height / 2 - tooltipHeight / 2,
+        };
+      default:
+        return {};
+    }
+  };
+
+  const getArrowStyle = () => {
+    switch (placement) {
+      case "top":
+        return styles.arrowBottom;
+      case "bottom":
+        return styles.arrowTop;
+      case "left":
+        return styles.arrowRight;
+      case "right":
+        return styles.arrowLeft;
+      default:
+        return {};
+    }
   };
 
   return (
@@ -45,20 +99,17 @@ export const Tooltip: React.FC<TooltipProps> = ({
       >
         <TouchableWithoutFeedback onPress={() => setVisible(false)}>
           <View style={[StyleSheet.absoluteFill, styles.backdrop]}>
-            <View
-              style={[
-                styles.tooltipContainer,
-                {
-                  position: "absolute",
-                  left: position.x + position.width / 2 - 125,
-                  top: position.y + 4,
-                },
-              ]}
-            >
-              <View style={styles.tooltipBox}>
+            <View style={[styles.tooltipContainer, getTooltipStyle()]}>
+              <View
+                style={styles.tooltipBox}
+                onLayout={(event) => {
+                  const { width, height } = event.nativeEvent.layout;
+                  setTooltipSize({ width, height });
+                }}
+              >
                 <Text style={styles.tooltipText}>{message}</Text>
               </View>
-              <View style={styles.tooltipArrow} />
+              <View style={[styles.tooltipArrowBase, getArrowStyle()]} />
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -82,20 +133,55 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.2)",
   },
   tooltipContainer: {
-    alignItems: "center",
-  },
-  tooltipArrow: {
     position: "absolute",
+  },
+  tooltipArrowBase: {
+    position: "absolute",
+    width: 0,
+    height: 0,
+  },
+  arrowTop: {
     top: -8,
     left: "50%",
     marginLeft: -8,
-    width: 0,
-    height: 0,
     borderLeftWidth: 8,
     borderRightWidth: 8,
     borderBottomWidth: 8,
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
     borderBottomColor: "#333",
+  },
+  arrowBottom: {
+    bottom: -8,
+    left: "50%",
+    marginLeft: -8,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderTopWidth: 8,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: "#333",
+  },
+  arrowLeft: {
+    left: -8,
+    top: "50%",
+    marginTop: -8,
+    borderTopWidth: 8,
+    borderBottomWidth: 8,
+    borderRightWidth: 8,
+    borderTopColor: "transparent",
+    borderBottomColor: "transparent",
+    borderRightColor: "#333",
+  },
+  arrowRight: {
+    right: -8,
+    top: "50%",
+    marginTop: -8,
+    borderTopWidth: 8,
+    borderBottomWidth: 8,
+    borderLeftWidth: 8,
+    borderTopColor: "transparent",
+    borderBottomColor: "transparent",
+    borderLeftColor: "#333",
   },
 });
