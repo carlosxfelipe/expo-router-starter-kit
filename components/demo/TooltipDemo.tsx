@@ -1,20 +1,27 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Tooltip } from "@/components/Tooltip";
 import React from "react";
-import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
+import {
+  DimensionValue,
+  Pressable,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
 import { MCIcons } from "../ui/MCIcons";
 
 interface Props {
   message: string;
   placement?: "top" | "bottom" | "left" | "right";
+  width?: DimensionValue;
 }
 
-export const TooltipDemo: React.FC<Props> = ({ message, placement }) => {
+export const TooltipDemo: React.FC<Props> = ({ message, placement, width }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width }]}>
       <Tooltip message={message} placement={placement}>
         <Pressable style={styles.helpIcon}>
           <ThemedText style={styles.text}>Demonstração de Tooltip</ThemedText>
@@ -32,6 +39,7 @@ export const TooltipDemo: React.FC<Props> = ({ message, placement }) => {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 16,
+    // backgroundColor: "yellow",
   },
   helpIcon: {
     flexDirection: "row",

@@ -25,6 +25,11 @@ export default function HomeScreen() {
           {/* <ProductList title="Popular Products" products={popularProducts} /> */}
           {/* <ProductList title="New Arrivals" products={newArrivals} /> */}
           <TooltipDemo message="Segundo tooltip" placement="bottom" />
+          <TooltipDemo
+            message="Terceiro tooltip"
+            placement="right"
+            width={"54%"}
+          />
         </View>
       </ThemedView>
     </MaxWidthLayout>
