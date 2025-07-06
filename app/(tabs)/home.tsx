@@ -83,19 +83,16 @@ export default function HomeScreen() {
             label="Tooltip em cima"
             message="Primeiro tooltip"
             placement="top"
-            width={"100%"}
           />
           <TooltipDemo
             label="Tooltip em baixo"
             message="Segundo tooltip"
             placement="bottom"
-            width={"100%"}
           />
           <TooltipDemo
             label="Tooltip à direita"
             message="Terceiro tooltip"
             placement="right"
-            width={"100%"}
           />
         </View>
       </ThemedView>

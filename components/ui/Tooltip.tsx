@@ -13,6 +13,7 @@ interface TooltipProps {
   message: string;
   children: React.ReactElement<any>;
   placement?: "top" | "bottom" | "left" | "right";
+  margin?: number;
   isDarkMode?: boolean;
   textColor?: string;
   textColorDark?: string;
@@ -24,6 +25,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   message,
   children,
   placement = "bottom",
+  margin = 8,
   isDarkMode = false,
   textColor = "#fff",
   textColorDark = "#333",
@@ -49,8 +51,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
     });
   };
 
-  const MARGIN = 8;
-
   const getTooltipStyle = () => {
     const { width: tooltipWidth, height: tooltipHeight } = tooltipSize;
 
@@ -59,31 +59,31 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
     switch (placement) {
       case "top":
-        top = position.y - tooltipHeight - MARGIN;
+        top = position.y - tooltipHeight - margin;
         left = position.x + position.width / 2 - tooltipWidth / 2;
         break;
       case "bottom":
-        top = position.y + position.height + MARGIN;
+        top = position.y + position.height + margin;
         left = position.x + position.width / 2 - tooltipWidth / 2;
         break;
       case "left":
         top = position.y + position.height / 2 - tooltipHeight / 2;
-        left = position.x - tooltipWidth - MARGIN;
+        left = position.x - tooltipWidth - margin;
         break;
       case "right":
         top = position.y + position.height / 2 - tooltipHeight / 2;
-        left = position.x + position.width + MARGIN;
+        left = position.x + position.width + margin;
         break;
     }
 
     // Evitar que ultrapasse as bordas da tela
     top = Math.max(
-      MARGIN,
-      Math.min(screenHeight - tooltipHeight - MARGIN, top)
+      margin,
+      Math.min(screenHeight - tooltipHeight - margin, top)
     );
     left = Math.max(
-      MARGIN,
-      Math.min(screenWidth - tooltipWidth - MARGIN, left)
+      margin,
+      Math.min(screenWidth - tooltipWidth - margin, left)
     );
 
     return { top, left };
