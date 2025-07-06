@@ -12,11 +12,17 @@ import { Tooltip } from "../ui/Tooltip";
 
 interface Props {
   message: string;
+  label?: string;
   placement?: "top" | "bottom" | "left" | "right";
   width?: DimensionValue;
 }
 
-export const TooltipDemo: React.FC<Props> = ({ message, placement, width }) => {
+export const TooltipDemo: React.FC<Props> = ({
+  message,
+  label = "Demonstração de Tooltip",
+  placement,
+  width,
+}) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
 
@@ -32,7 +38,7 @@ export const TooltipDemo: React.FC<Props> = ({ message, placement, width }) => {
         // backgroundColor="yellow"
       >
         <Pressable style={styles.helpIcon}>
-          <ThemedText style={styles.text}>Demonstração de Tooltip</ThemedText>
+          <ThemedText style={styles.text}>{label}</ThemedText>
           <MCIcons
             name="help-circle-outline"
             size={16}
@@ -46,8 +52,8 @@ export const TooltipDemo: React.FC<Props> = ({ message, placement, width }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 16,
-    // backgroundColor: "yellow",
+    marginVertical: 8,
+    backgroundColor: "yellow",
   },
   helpIcon: {
     flexDirection: "row",

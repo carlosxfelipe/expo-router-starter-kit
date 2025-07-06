@@ -72,18 +72,30 @@ export default function HomeScreen() {
               images={images}
               showIndicators
               indicatorColor={tintColor}
+              onPressImage={(id) => console.log("clicked", id)}
               isDarkMode={isDarkMode}
             />
           )}
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <ThemedText>Tela de Início</ThemedText>
-          <TooltipDemo message="Primeiro tooltip" placement="top" />
-          <TooltipDemo message="Segundo tooltip" placement="bottom" />
           <TooltipDemo
+            label="Tooltip em cima"
+            message="Primeiro tooltip"
+            placement="top"
+            width={"100%"}
+          />
+          <TooltipDemo
+            label="Tooltip em baixo"
+            message="Segundo tooltip"
+            placement="bottom"
+            width={"100%"}
+          />
+          <TooltipDemo
+            label="Tooltip à direita"
             message="Terceiro tooltip"
             placement="right"
-            width={"54%"}
+            width={"100%"}
           />
         </View>
       </ThemedView>
