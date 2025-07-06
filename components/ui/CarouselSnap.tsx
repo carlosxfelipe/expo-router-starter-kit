@@ -16,7 +16,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { CarouselSkeleton } from "./CarouselSkeleton";
+import { SkeletonView } from "./SkeletonView";
 
 interface ImageData {
   id: string | number;
@@ -151,9 +151,10 @@ export const CarouselSnap = ({
               {hasImages ? (
                 <>
                   {!loadedImages[index] && (
-                    <CarouselSkeleton
+                    <SkeletonView
                       width={imageWidth}
                       height={height}
+                      borderRadius={18}
                       isDarkMode={isDarkMode}
                     />
                   )}
@@ -168,9 +169,10 @@ export const CarouselSnap = ({
                   />
                 </>
               ) : (
-                <CarouselSkeleton
+                <SkeletonView
                   width={imageWidth}
                   height={height}
+                  borderRadius={18}
                   isDarkMode={isDarkMode}
                 />
               )}

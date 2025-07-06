@@ -6,7 +6,7 @@ import { CarouselFade } from "@/components/ui/CarouselFade";
 import { CarouselSnap } from "@/components/ui/CarouselSnap";
 import { SearchBarHeader } from "@/components/ui/SearchBarHeader";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useColorScheme, View } from "react-native";
+import { Platform, useColorScheme, View } from "react-native";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -52,8 +52,7 @@ export default function HomeScreen() {
     },
   ];
 
-  // const isWeb = Platform.OS === "web";
-  const isWeb = true;
+  const isWeb = Platform.OS === "web";
 
   return (
     <MaxWidthLayout>
@@ -70,7 +69,7 @@ export default function HomeScreen() {
             />
           ) : (
             <CarouselSnap
-              images={images}
+              images={[]}
               showIndicators
               indicatorColor={tintColor}
               isDarkMode={isDarkMode}
