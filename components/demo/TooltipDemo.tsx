@@ -1,5 +1,4 @@
 import { ThemedText } from "@/components/ThemedText";
-import { Tooltip } from "@/components/Tooltip";
 import React from "react";
 import {
   DimensionValue,
@@ -9,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { MCIcons } from "../ui/MCIcons";
+import { Tooltip } from "../ui/Tooltip";
 
 interface Props {
   message: string;

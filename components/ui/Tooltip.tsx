@@ -90,15 +90,29 @@ export const Tooltip: React.FC<TooltipProps> = ({
   };
 
   const getArrowStyle = () => {
+    const color = isDarkMode ? backgroundColorDark : backgroundColor;
+
     switch (placement) {
       case "top":
-        return styles.arrowBottom;
+        return {
+          ...styles.arrowAtBottom,
+          borderBottomColor: color,
+        };
       case "bottom":
-        return styles.arrowTop;
+        return {
+          ...styles.arrowAtTop,
+          borderTopColor: color,
+        };
       case "left":
-        return styles.arrowRight;
+        return {
+          ...styles.arrowAtRight,
+          borderRightColor: color,
+        };
       case "right":
-        return styles.arrowLeft;
+        return {
+          ...styles.arrowAtLeft,
+          borderLeftColor: color,
+        };
       default:
         return {};
     }
@@ -175,7 +189,7 @@ const styles = StyleSheet.create({
     width: 0,
     height: 0,
   },
-  arrowTop: {
+  arrowAtTop: {
     top: -8,
     left: "50%",
     marginLeft: -8,
@@ -186,7 +200,7 @@ const styles = StyleSheet.create({
     borderRightColor: "transparent",
     // borderBottomColor: "white",
   },
-  arrowBottom: {
+  arrowAtBottom: {
     bottom: -8,
     left: "50%",
     marginLeft: -8,
@@ -197,7 +211,7 @@ const styles = StyleSheet.create({
     borderRightColor: "transparent",
     // borderTopColor: "white",
   },
-  arrowLeft: {
+  arrowAtLeft: {
     left: -8,
     top: "50%",
     marginTop: -8,
@@ -208,7 +222,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "transparent",
     // borderRightColor: "white",
   },
-  arrowRight: {
+  arrowAtRight: {
     right: -8,
     top: "50%",
     marginTop: -8,
