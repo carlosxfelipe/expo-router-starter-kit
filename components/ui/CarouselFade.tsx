@@ -1,0 +1,143 @@
+import React, { useEffect, useState } from "react";
+import type { ImageSourcePropType } from "react-native";
+import { Image, Platform, Pressable, StyleSheet, View } from "react-native";
+
+interface Props {
+  images: { id: string | number; source: ImageSourcePropType }[];
+  height?: number;
+  onPressImage?: (id: string | number) => void;
+  autoplayInterval?: number;
+  showIndicators?: boolean;
+  indicatorColor?: string;
+  isDarkMode?: boolean;
+}
+
+export const CarouselFade = ({
+  images,
+  height = 180,
+  onPressImage,
+  autoplayInterval = 3000,
+  showIndicators = false,
+  indicatorColor = "#000",
+  isDarkMode = false,
+}: Props) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const hasImages = images.length > 0;
+
+  useEffect(() => {
+    if (!hasImages || images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, autoplayInterval);
+
+    return () => clearInterval(interval);
+  }, [autoplayInterval, hasImages, images.length]);
+
+  return (
+    <View style={styles.container}>
+      <View style={[styles.imageWrapper, { height }]}>
+        {hasImages &&
+          images.map((img, index) => {
+            const isVisible = currentIndex === index;
+            return (
+              <Pressable
+                key={img.id}
+                onPress={() => onPressImage?.(img.id)}
+                style={[
+                  styles.imageContainer,
+                  {
+                    height,
+                    opacity: isVisible ? 1 : 0,
+                    ...(Platform.OS === "web"
+                      ? {
+                          transitionDuration: "0.6s",
+                          transitionProperty: "opacity",
+                          transitionTimingFunction: "ease-in-out",
+                        }
+                      : {}),
+                  },
+                ]}
+              >
+                <Image
+                  source={
+                    typeof img.source === "string"
+                      ? { uri: img.source }
+                      : img.source
+                  }
+                  style={[styles.image, { width: "100%", height }]}
+                  resizeMode="cover"
+                />
+              </Pressable>
+            );
+          })}
+      </View>
+
+      {showIndicators && hasImages && (
+        <View style={styles.indicatorContainer}>
+          {images.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.indicator,
+                currentIndex === index && {
+                  ...styles.activeIndicator,
+                  backgroundColor: indicatorColor,
+                },
+              ]}
+            />
+          ))}
+        </View>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    paddingHorizontal: 16,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  imageWrapper: {
+    width: "100%",
+    position: "relative",
+  },
+  imageContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    flex: 1,
+    borderRadius: 18,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.24,
+    shadowRadius: 7,
+    elevation: 9,
+  },
+  indicatorContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  indicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#ccc",
+    marginHorizontal: 4,
+  },
+  activeIndicator: {
+    transform: [{ scale: 1.2 }],
+  },
+});

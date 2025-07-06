@@ -2,7 +2,8 @@ import { TooltipDemo } from "@/components/demo/TooltipDemo";
 import { MaxWidthLayout } from "@/components/layout/MaxWidthLayout";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Carousel } from "@/components/ui/Carousel";
+import { CarouselFade } from "@/components/ui/CarouselFade";
+import { CarouselSnap } from "@/components/ui/CarouselSnap";
 import { SearchBarHeader } from "@/components/ui/SearchBarHeader";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useColorScheme, View } from "react-native";
@@ -51,17 +52,30 @@ export default function HomeScreen() {
     },
   ];
 
+  // const isWeb = Platform.OS === "web";
+  const isWeb = true;
+
   return (
     <MaxWidthLayout>
       <SearchBarHeader />
       <ThemedView style={{ flex: 1 }}>
         <View style={{ marginTop: 16 }}>
-          <Carousel
-            images={images}
-            showIndicators
-            indicatorColor={tintColor}
-            isDarkMode={isDarkMode}
-          />
+          {isWeb ? (
+            <CarouselFade
+              images={images}
+              showIndicators
+              indicatorColor={tintColor}
+              onPressImage={(id) => console.log("clicked", id)}
+              isDarkMode={isDarkMode}
+            />
+          ) : (
+            <CarouselSnap
+              images={images}
+              showIndicators
+              indicatorColor={tintColor}
+              isDarkMode={isDarkMode}
+            />
+          )}
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <ThemedText>Tela de Início</ThemedText>
