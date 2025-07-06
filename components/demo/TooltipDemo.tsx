@@ -22,7 +22,15 @@ export const TooltipDemo: React.FC<Props> = ({ message, placement, width }) => {
 
   return (
     <View style={[styles.container, { width }]}>
-      <Tooltip message={message} placement={placement} isDarkMode={isDarkMode}>
+      <Tooltip
+        message={message}
+        placement={placement}
+        isDarkMode={isDarkMode}
+        // textColorDark="blue"
+        // backgroundColorDark="red"
+        // textColor="green"
+        // backgroundColor="yellow"
+      >
         <Pressable style={styles.helpIcon}>
           <ThemedText style={styles.text}>Demonstração de Tooltip</ThemedText>
           <MCIcons

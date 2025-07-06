@@ -95,23 +95,27 @@ export const Tooltip: React.FC<TooltipProps> = ({
     switch (placement) {
       case "top":
         return {
-          ...styles.arrowAtBottom,
-          borderBottomColor: color,
+          ...styles.arrowPointingUp,
+          borderTopColor: color,
+          borderTopWidth: 8,
         };
       case "bottom":
         return {
-          ...styles.arrowAtTop,
-          borderTopColor: color,
+          ...styles.arrowPointingDown,
+          borderBottomColor: color,
+          borderBottomWidth: 8,
         };
       case "left":
         return {
-          ...styles.arrowAtRight,
-          borderRightColor: color,
+          ...styles.arrowPointingLeft,
+          borderLeftColor: color,
+          borderLeftWidth: 8,
         };
       case "right":
         return {
-          ...styles.arrowAtLeft,
-          borderLeftColor: color,
+          ...styles.arrowPointingRight,
+          borderRightColor: color,
+          borderRightWidth: 8,
         };
       default:
         return {};
@@ -188,8 +192,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 0,
     height: 0,
+    borderTopColor: "transparent",
+    borderBottomColor: "transparent",
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
   },
-  arrowAtTop: {
+  arrowPointingDown: {
     top: -8,
     left: "50%",
     marginLeft: -8,
@@ -198,20 +206,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 8,
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
-    // borderBottomColor: "white",
   },
-  arrowAtBottom: {
+  arrowPointingUp: {
     bottom: -8,
     left: "50%",
     marginLeft: -8,
     borderLeftWidth: 8,
     borderRightWidth: 8,
     borderTopWidth: 8,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    // borderTopColor: "white",
   },
-  arrowAtLeft: {
+  arrowPointingRight: {
     left: -8,
     top: "50%",
     marginTop: -8,
@@ -220,9 +224,8 @@ const styles = StyleSheet.create({
     borderRightWidth: 8,
     borderTopColor: "transparent",
     borderBottomColor: "transparent",
-    // borderRightColor: "white",
   },
-  arrowAtRight: {
+  arrowPointingLeft: {
     right: -8,
     top: "50%",
     marginTop: -8,
@@ -231,6 +234,5 @@ const styles = StyleSheet.create({
     borderLeftWidth: 8,
     borderTopColor: "transparent",
     borderBottomColor: "transparent",
-    // borderLeftColor: "white",
   },
 });
