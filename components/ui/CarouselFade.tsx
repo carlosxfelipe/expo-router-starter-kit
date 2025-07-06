@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { ImageSourcePropType } from "react-native";
 import { Image, Platform, Pressable, StyleSheet, View } from "react-native";
+import { SkeletonView } from "./SkeletonView";
 
 interface Props {
   images: { id: string | number; source: ImageSourcePropType }[];
@@ -24,6 +25,20 @@ export const CarouselFade = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const hasImages = images.length > 0;
 
+  const displayItems = useMemo(
+    () =>
+      hasImages
+        ? images
+        : Array.from({ length: 1 }, (_, i) => ({
+            id: `skeleton-${i}`,
+          })),
+    [images, hasImages]
+  );
+
+  const [loadedImages, setLoadedImages] = useState<boolean[]>(() =>
+    new Array(displayItems.length).fill(false)
+  );
+
   useEffect(() => {
     if (!hasImages || images.length <= 1) return;
 
@@ -34,43 +49,77 @@ export const CarouselFade = ({
     return () => clearInterval(interval);
   }, [autoplayInterval, hasImages, images.length]);
 
+  const handleImageLoad = (index: number) => {
+    setLoadedImages((prev) => {
+      if (prev[index]) return prev;
+      const updated = [...prev];
+      updated[index] = true;
+      return updated;
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={[styles.imageWrapper, { height }]}>
-        {hasImages &&
-          images.map((img, index) => {
-            const isVisible = currentIndex === index;
-            return (
-              <Pressable
-                key={img.id}
-                onPress={() => onPressImage?.(img.id)}
-                style={[
-                  styles.imageContainer,
-                  {
-                    height,
-                    opacity: isVisible ? 1 : 0,
-                    ...(Platform.OS === "web"
-                      ? {
-                          transitionDuration: "0.6s",
-                          transitionProperty: "opacity",
-                          transitionTimingFunction: "ease-in-out",
-                        }
-                      : {}),
-                  },
-                ]}
-              >
-                <Image
-                  source={
-                    typeof img.source === "string"
-                      ? { uri: img.source }
-                      : img.source
-                  }
-                  style={[styles.image, { width: "100%", height }]}
-                  resizeMode="cover"
+        {displayItems.map((item, index) => {
+          const isVisible = currentIndex === index;
+          const isLoaded = loadedImages[index];
+
+          return (
+            <Pressable
+              key={item.id}
+              onPress={() => hasImages && onPressImage?.(item.id)}
+              style={[
+                styles.imageContainer,
+                {
+                  height,
+                  opacity: isVisible ? 1 : 0,
+                  ...(Platform.OS === "web"
+                    ? {
+                        transitionDuration: "0.6s",
+                        transitionProperty: "opacity",
+                        transitionTimingFunction: "ease-in-out",
+                      }
+                    : {}),
+                },
+              ]}
+            >
+              {hasImages ? (
+                <>
+                  {!isLoaded && (
+                    <SkeletonView
+                      width="100%"
+                      height={height}
+                      borderRadius={18}
+                      isDarkMode={isDarkMode}
+                    />
+                  )}
+                  <Image
+                    source={
+                      typeof (item as any).source === "string"
+                        ? { uri: (item as any).source }
+                        : (item as any).source
+                    }
+                    style={[
+                      styles.image,
+                      { width: "100%", height },
+                      !isLoaded && { position: "absolute", opacity: 0 },
+                    ]}
+                    resizeMode="cover"
+                    onLoadEnd={() => handleImageLoad(index)}
+                  />
+                </>
+              ) : (
+                <SkeletonView
+                  width="100%"
+                  height={height}
+                  borderRadius={18}
+                  isDarkMode={isDarkMode}
                 />
-              </Pressable>
-            );
-          })}
+              )}
+            </Pressable>
+          );
+        })}
       </View>
 
       {showIndicators && hasImages && (

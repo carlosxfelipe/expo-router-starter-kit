@@ -69,7 +69,7 @@ export default function HomeScreen() {
             />
           ) : (
             <CarouselSnap
-              images={[]}
+              images={images}
               showIndicators
               indicatorColor={tintColor}
               isDarkMode={isDarkMode}

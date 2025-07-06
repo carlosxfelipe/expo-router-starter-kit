@@ -47,7 +47,6 @@ export const CarouselSnap = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Check if there are images to display
   const hasImages = images.length > 0;
   const placeholders = useMemo(
     () =>
@@ -134,7 +133,7 @@ export const CarouselSnap = ({
           paddingHorizontal: carouselEdgePadding,
         }}
         onMomentumScrollEnd={handleScrollEnd}
-        scrollEnabled={hasImages} // disable scroll for placeholders
+        scrollEnabled={hasImages}
       >
         {(hasImages ? images : placeholders).map((item, index) => {
           const imageItem = item as ImageData;
