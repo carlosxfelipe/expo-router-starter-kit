@@ -39,7 +39,7 @@ export const CarouselSnap = ({
   onPressImage,
   autoplayInterval = 3000,
   showIndicators = false,
-  indicatorColor = "#000",
+  indicatorColor = "blue",
   isDarkMode = false,
 }: Props) => {
   const scrollViewRef = useRef<ScrollView>(null);

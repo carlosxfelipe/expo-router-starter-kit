@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import type { ImageSourcePropType } from "react-native";
-import { Image, Platform, Pressable, StyleSheet, View } from "react-native";
+import { Animated, Image, Pressable, StyleSheet, View } from "react-native";
 import { SkeletonView } from "./SkeletonView";
 
 interface Props {
@@ -19,7 +19,7 @@ export const CarouselFade = ({
   onPressImage,
   autoplayInterval = 3000,
   showIndicators = false,
-  indicatorColor = "#000",
+  indicatorColor = "blue",
   isDarkMode = false,
 }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -35,6 +35,11 @@ export const CarouselFade = ({
     [images, hasImages]
   );
 
+  const opacityValues = useMemo(
+    () => displayItems.map((_, i) => new Animated.Value(i === 0 ? 1 : 0)),
+    [displayItems]
+  );
+
   const [loadedImages, setLoadedImages] = useState<boolean[]>(() =>
     new Array(displayItems.length).fill(false)
   );
@@ -43,11 +48,27 @@ export const CarouselFade = ({
     if (!hasImages || images.length <= 1) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      const nextIndex = (currentIndex + 1) % images.length;
+
+      // Fade out current
+      Animated.timing(opacityValues[currentIndex], {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }).start();
+
+      // Fade in next
+      Animated.timing(opacityValues[nextIndex], {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }).start();
+
+      setCurrentIndex(nextIndex);
     }, autoplayInterval);
 
     return () => clearInterval(interval);
-  }, [autoplayInterval, hasImages, images.length]);
+  }, [autoplayInterval, currentIndex, hasImages, images.length, opacityValues]);
 
   const handleImageLoad = (index: number) => {
     setLoadedImages((prev) => {
@@ -62,62 +83,55 @@ export const CarouselFade = ({
     <View style={styles.container}>
       <View style={[styles.imageWrapper, { height }]}>
         {displayItems.map((item, index) => {
-          const isVisible = currentIndex === index;
           const isLoaded = loadedImages[index];
 
           return (
-            <Pressable
+            <Animated.View
               key={item.id}
-              onPress={() => hasImages && onPressImage?.(item.id)}
               style={[
                 styles.imageContainer,
-                {
-                  height,
-                  opacity: isVisible ? 1 : 0,
-                  ...(Platform.OS === "web"
-                    ? {
-                        transitionDuration: "0.6s",
-                        transitionProperty: "opacity",
-                        transitionTimingFunction: "ease-in-out",
-                      }
-                    : {}),
-                },
+                { height, opacity: opacityValues[index] },
               ]}
             >
-              {hasImages ? (
-                <>
-                  {!isLoaded && (
-                    <SkeletonView
-                      width="100%"
-                      height={height}
-                      borderRadius={18}
-                      isDarkMode={isDarkMode}
+              <Pressable
+                onPress={() => hasImages && onPressImage?.(item.id)}
+                style={{ width: "100%", height }}
+              >
+                {hasImages ? (
+                  <>
+                    {!isLoaded && (
+                      <SkeletonView
+                        width="100%"
+                        height={height}
+                        borderRadius={18}
+                        isDarkMode={isDarkMode}
+                      />
+                    )}
+                    <Image
+                      source={
+                        typeof (item as any).source === "string"
+                          ? { uri: (item as any).source }
+                          : (item as any).source
+                      }
+                      style={[
+                        styles.image,
+                        { width: "100%", height },
+                        !isLoaded && { position: "absolute", opacity: 0 },
+                      ]}
+                      resizeMode="cover"
+                      onLoadEnd={() => handleImageLoad(index)}
                     />
-                  )}
-                  <Image
-                    source={
-                      typeof (item as any).source === "string"
-                        ? { uri: (item as any).source }
-                        : (item as any).source
-                    }
-                    style={[
-                      styles.image,
-                      { width: "100%", height },
-                      !isLoaded && { position: "absolute", opacity: 0 },
-                    ]}
-                    resizeMode="cover"
-                    onLoadEnd={() => handleImageLoad(index)}
+                  </>
+                ) : (
+                  <SkeletonView
+                    width="100%"
+                    height={height}
+                    borderRadius={18}
+                    isDarkMode={isDarkMode}
                   />
-                </>
-              ) : (
-                <SkeletonView
-                  width="100%"
-                  height={height}
-                  borderRadius={18}
-                  isDarkMode={isDarkMode}
-                />
-              )}
-            </Pressable>
+                )}
+              </Pressable>
+            </Animated.View>
           );
         })}
       </View>
