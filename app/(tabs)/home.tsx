@@ -1,17 +1,23 @@
+import { SwipeModalDemo } from "@/components/demo/SwipeModalDemo";
 import { TooltipDemo } from "@/components/demo/TooltipDemo";
 import { MaxWidthLayout } from "@/components/layout/MaxWidthLayout";
+import SwipeModal from "@/components/SwipeModal";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { Button } from "@/components/ui/Button";
 import { CarouselSnap } from "@/components/ui/CarouselSnap";
 import { SearchBarHeader } from "@/components/ui/SearchBarHeader";
 import { images } from "@/data/images";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useState } from "react";
 import { useColorScheme, View } from "react-native";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
   const tintColor = useThemeColor({}, "tint");
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <MaxWidthLayout>
@@ -32,8 +38,17 @@ export default function HomeScreen() {
             message="Aute nulla est ut consequat magna ut minim aliquip minim proident excepteur."
             placement="top"
           />
+          <Button
+            title="Abrir swipe modal"
+            onPress={() => setModalVisible(true)}
+          />
         </View>
       </ThemedView>
+
+      {/* Modal */}
+      <SwipeModal visible={modalVisible} onClose={() => setModalVisible(false)}>
+        <SwipeModalDemo onClose={() => setModalVisible(false)} />
+      </SwipeModal>
     </MaxWidthLayout>
   );
 }
