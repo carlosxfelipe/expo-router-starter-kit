@@ -46,7 +46,19 @@ export default function HomeScreen() {
       </ThemedView>
 
       {/* Modal */}
-      <SwipeModal visible={modalVisible} onClose={() => setModalVisible(false)}>
+      <SwipeModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        bgColor={isDarkMode ? "#1a1a1a" : "#fff"}
+        showBar={true}
+        barColor={isDarkMode ? "#888" : "#ccc"}
+        headerComponent={
+          <ThemedText style={{ padding: 16 }}>Cabeçalho do Modal</ThemedText>
+        }
+        footerComponent={
+          <ThemedText style={{ padding: 16 }}>Rodapé do Modal</ThemedText>
+        }
+      >
         <SwipeModalDemo onClose={() => setModalVisible(false)} />
       </SwipeModal>
     </MaxWidthLayout>

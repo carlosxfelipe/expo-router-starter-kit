@@ -19,6 +19,13 @@ type SwipeModalProps = {
   children: React.ReactNode;
   closeOnBackdropPress?: boolean;
   enableSwipeToClose?: boolean;
+  maxHeight?: number | "auto";
+  defaultHeight?: number;
+  bgColor?: string;
+  showBar?: boolean;
+  barColor?: string;
+  headerComponent?: React.ReactNode;
+  footerComponent?: React.ReactNode;
 };
 
 const SwipeModal: React.FC<SwipeModalProps> = ({
@@ -27,8 +34,21 @@ const SwipeModal: React.FC<SwipeModalProps> = ({
   children,
   closeOnBackdropPress = true,
   enableSwipeToClose = true,
+  maxHeight = "auto",
+  defaultHeight,
+  bgColor = "#fff",
+  showBar = true,
+  barColor = "#ccc",
+  headerComponent,
+  footerComponent,
 }) => {
+  const initialHeight =
+    typeof maxHeight === "number"
+      ? Math.min(maxHeight, SCREEN_HEIGHT)
+      : defaultHeight || SCREEN_HEIGHT * 0.9;
+
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const containerHeight = useRef(initialHeight).current;
 
   const hideModal = useCallback(() => {
     Animated.timing(translateY, {
@@ -41,14 +61,14 @@ const SwipeModal: React.FC<SwipeModalProps> = ({
   useEffect(() => {
     if (visible) {
       Animated.timing(translateY, {
-        toValue: 0,
+        toValue: SCREEN_HEIGHT - containerHeight,
         duration: 300,
         useNativeDriver: true,
       }).start();
     } else {
       translateY.setValue(SCREEN_HEIGHT);
     }
-  }, [visible, translateY]);
+  }, [visible, translateY, containerHeight]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -56,7 +76,7 @@ const SwipeModal: React.FC<SwipeModalProps> = ({
         enableSwipeToClose && gesture.dy > 10,
       onPanResponderMove: (_, gesture) => {
         if (gesture.dy > 0) {
-          translateY.setValue(gesture.dy);
+          translateY.setValue(SCREEN_HEIGHT - containerHeight + gesture.dy);
         }
       },
       onPanResponderRelease: (_, gesture) => {
@@ -64,7 +84,7 @@ const SwipeModal: React.FC<SwipeModalProps> = ({
           hideModal();
         } else {
           Animated.spring(translateY, {
-            toValue: 0,
+            toValue: SCREEN_HEIGHT - containerHeight,
             useNativeDriver: true,
           }).start();
         }
@@ -81,11 +101,30 @@ const SwipeModal: React.FC<SwipeModalProps> = ({
       </TouchableWithoutFeedback>
 
       <Animated.View
-        style={[styles.container, { transform: [{ translateY }] }]}
+        style={[
+          styles.container,
+          {
+            height: containerHeight,
+            transform: [{ translateY }],
+            backgroundColor: bgColor,
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            overflow: "hidden",
+          },
+        ]}
         {...(enableSwipeToClose ? panResponder.panHandlers : {})}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.content}>{children}</View>
+          <View style={styles.content}>
+            {showBar && (
+              <View style={styles.barContainer}>
+                <View style={[styles.bar, { backgroundColor: barColor }]} />
+              </View>
+            )}
+            {headerComponent}
+            <View style={styles.body}>{children}</View>
+            {footerComponent}
+          </View>
         </TouchableWithoutFeedback>
       </Animated.View>
     </Modal>
@@ -101,14 +140,26 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    maxHeight: "90%",
   },
   content: {
-    backgroundColor: "#fff",
+    flex: 1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    overflow: "hidden",
+  },
+  barContainer: {
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bar: {
+    width: 40,
+    height: 5,
+    borderRadius: 3,
+  },
+  body: {
+    flex: 1,
     padding: 16,
-    minHeight: 100,
   },
 });
 
