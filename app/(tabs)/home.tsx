@@ -1,4 +1,4 @@
-import { SwipeModalDemo } from "@/components/demo/SwipeModalDemo";
+import { SwipeModalChildren } from "@/components/demo/SwipeModalChildren";
 import { TooltipDemo } from "@/components/demo/TooltipDemo";
 import { showModal } from "@/components/GlobalSwipeModal";
 import { MaxWidthLayout } from "@/components/layout/MaxWidthLayout";
@@ -27,7 +27,7 @@ export default function HomeScreen() {
       footerComponent: (
         <ThemedText style={{ padding: 16 }}>Rodapé do Modal</ThemedText>
       ),
-      children: <SwipeModalDemo onClose={() => {}} />,
+      children: <SwipeModalChildren />,
     });
   };
 
