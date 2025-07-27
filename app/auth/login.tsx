@@ -29,11 +29,13 @@ export default function LoginScreen() {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
-    const showSub = Keyboard.addListener("keyboardDidShow", () =>
-      setKeyboardVisible(true)
+    const showSub = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setKeyboardVisible(true),
     );
-    const hideSub = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardVisible(false)
+    const hideSub = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setKeyboardVisible(false),
     );
 
     return () => {

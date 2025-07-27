@@ -27,7 +27,7 @@ export function MCIcons({ name, size = 24, color = "black", style }: Props) {
 
   if (!path) {
     console.warn(
-      `[MCIcons] Icon "${name}" resolved to "${iconKey}" not found in @mdi/js`
+      `[MCIcons] Icon "${name}" resolved to "${iconKey}" not found in @mdi/js`,
     );
     return null;
   }

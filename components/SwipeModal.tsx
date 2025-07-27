@@ -42,10 +42,9 @@ const SwipeModal: React.FC<SwipeModalProps> = ({
   headerComponent,
   footerComponent,
 }) => {
-  const initialHeight =
-    typeof maxHeight === "number"
-      ? Math.min(maxHeight, SCREEN_HEIGHT)
-      : defaultHeight || SCREEN_HEIGHT * 0.9;
+  const initialHeight = typeof maxHeight === "number"
+    ? Math.min(maxHeight, SCREEN_HEIGHT)
+    : defaultHeight || SCREEN_HEIGHT * 0.9;
 
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
   const containerHeight = useRef(initialHeight).current;
@@ -89,7 +88,7 @@ const SwipeModal: React.FC<SwipeModalProps> = ({
           }).start();
         }
       },
-    })
+    }),
   ).current;
 
   return (

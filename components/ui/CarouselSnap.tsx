@@ -53,7 +53,7 @@ export const CarouselSnap = ({
       !hasImages
         ? Array.from({ length: 3 }, (_, i) => ({ id: `skeleton-${i}` }))
         : [],
-    [hasImages]
+    [hasImages],
   );
 
   const [loadedImages, setLoadedImages] = useState<boolean[]>(() =>
@@ -147,34 +147,34 @@ export const CarouselSnap = ({
                 { width: imageWidth, marginHorizontal: gap / 2 },
               ]}
             >
-              {hasImages ? (
-                <>
-                  {!loadedImages[index] && (
-                    <SkeletonView
-                      width={imageWidth}
-                      height={height}
-                      borderRadius={18}
-                      isDarkMode={isDarkMode}
-                    />
-                  )}
-                  <Image
-                    style={[styles.image, { width: imageWidth, height }]}
-                    source={
-                      typeof imageItem.source === "string"
+              {hasImages
+                ? (
+                  <>
+                    {!loadedImages[index] && (
+                      <SkeletonView
+                        width={imageWidth}
+                        height={height}
+                        borderRadius={18}
+                        isDarkMode={isDarkMode}
+                      />
+                    )}
+                    <Image
+                      style={[styles.image, { width: imageWidth, height }]}
+                      source={typeof imageItem.source === "string"
                         ? { uri: imageItem.source }
-                        : imageItem.source
-                    }
-                    onLoadEnd={() => handleImageLoad(index)}
+                        : imageItem.source}
+                      onLoadEnd={() => handleImageLoad(index)}
+                    />
+                  </>
+                )
+                : (
+                  <SkeletonView
+                    width={imageWidth}
+                    height={height}
+                    borderRadius={18}
+                    isDarkMode={isDarkMode}
                   />
-                </>
-              ) : (
-                <SkeletonView
-                  width={imageWidth}
-                  height={height}
-                  borderRadius={18}
-                  isDarkMode={isDarkMode}
-                />
-              )}
+                )}
             </Pressable>
           );
         })}

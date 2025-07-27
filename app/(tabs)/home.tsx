@@ -1,6 +1,6 @@
 import { SwipeModalChildren } from "@/components/demo/SwipeModalChildren";
 import { TooltipDemo } from "@/components/demo/TooltipDemo";
-import { showModal } from "@/components/GlobalSwipeModal";
+import { closeModal, showModal } from "@/components/GlobalSwipeModal";
 import { MaxWidthLayout } from "@/components/layout/MaxWidthLayout";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -23,7 +23,29 @@ export default function HomeScreen() {
       barColor: isDarkMode ? "#888" : "#ccc",
       maxHeight: 650,
       headerComponent: (
-        <ThemedText style={{ padding: 16 }}>Cabeçalho do Modal</ThemedText>
+        <View
+          style={{
+            position: "relative",
+            padding: 16,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ThemedText style={{ fontWeight: "bold" }}>
+            Cabeçalho do Modal
+          </ThemedText>
+          <ThemedText
+            onPress={closeModal}
+            style={{
+              position: "absolute",
+              right: 16,
+              color: tintColor,
+              fontWeight: "bold",
+            }}
+          >
+            Fechar
+          </ThemedText>
+        </View>
       ),
       footerComponent: (
         <ThemedText style={{ padding: 16 }}>Rodapé do Modal</ThemedText>

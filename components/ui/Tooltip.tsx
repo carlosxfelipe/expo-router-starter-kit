@@ -79,11 +79,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
     // Evitar que ultrapasse as bordas da tela
     top = Math.max(
       margin,
-      Math.min(screenHeight - tooltipHeight - margin, top)
+      Math.min(screenHeight - tooltipHeight - margin, top),
     );
     left = Math.max(
       margin,
-      Math.min(screenWidth - tooltipWidth - margin, left)
+      Math.min(screenWidth - tooltipWidth - margin, left),
     );
 
     return { top, left };

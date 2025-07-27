@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
+  type DimensionValue,
   StyleProp,
   View,
   ViewStyle,
-  type DimensionValue,
 } from "react-native";
 
 interface SkeletonViewProps {
@@ -45,7 +45,7 @@ export const SkeletonView = ({
           duration: 700,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   }, [fadeAnim]);
 

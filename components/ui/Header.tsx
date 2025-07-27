@@ -23,13 +23,13 @@ export const Header = ({
       <ThemedText type="subtitle" style={styles.title}>
         {title}
       </ThemedText>
-      {iconName ? (
-        <TouchableOpacity onPress={onIconPress} style={styles.side}>
-          <MCIcons name={iconName} size={24} color={iconColor} />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.side} />
-      )}
+      {iconName
+        ? (
+          <TouchableOpacity onPress={onIconPress} style={styles.side}>
+            <MCIcons name={iconName} size={24} color={iconColor} />
+          </TouchableOpacity>
+        )
+        : <View style={styles.side} />}
     </ThemedView>
   );
 };
