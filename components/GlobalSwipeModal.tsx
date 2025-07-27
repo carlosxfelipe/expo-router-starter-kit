@@ -4,6 +4,7 @@ import {
   DeviceEventEmitter,
   Dimensions,
   Keyboard,
+  LayoutChangeEvent,
   Modal,
   PanResponder,
   StyleSheet,
@@ -19,7 +20,6 @@ export type GlobalSwipeModalProps = {
   closeOnBackdropPress?: boolean;
   enableSwipeToClose?: boolean;
   maxHeight?: number | "auto";
-  defaultHeight?: number;
   bgColor?: string;
   showBar?: boolean;
   barColor?: string;
@@ -38,11 +38,10 @@ export const closeModal = () => {
 const GlobalSwipeModal: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [modalProps, setModalProps] = useState<GlobalSwipeModalProps | null>(
-    null
+    null,
   );
-
+  const [containerHeight, setContainerHeight] = useState(SCREEN_HEIGHT * 0.9);
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
-  const containerHeight = useRef(SCREEN_HEIGHT * 0.9).current;
 
   const hideModal = useCallback(() => {
     Animated.timing(translateY, {
@@ -58,35 +57,50 @@ const GlobalSwipeModal: React.FC = () => {
   useEffect(() => {
     const showListener = DeviceEventEmitter.addListener(
       "SHOW_GLOBAL_MODAL",
-      (props: GlobalSwipeModalProps) => {
+      (props) => {
         setModalProps(props);
         setVisible(true);
-
-        const height =
-          typeof props.maxHeight === "number"
-            ? Math.min(props.maxHeight, SCREEN_HEIGHT)
-            : props.defaultHeight || SCREEN_HEIGHT * 0.9;
-
-        Animated.timing(translateY, {
-          toValue: SCREEN_HEIGHT - height,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
-      }
+      },
     );
-
     const closeListener = DeviceEventEmitter.addListener(
       "CLOSE_GLOBAL_MODAL",
       () => {
         hideModal();
-      }
+      },
     );
-
     return () => {
       showListener.remove();
       closeListener.remove();
     };
-  }, [translateY, hideModal]);
+  }, [hideModal]);
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const height = event.nativeEvent.layout.height;
+    if (modalProps?.maxHeight === "auto") {
+      const clamped = Math.min(height, SCREEN_HEIGHT);
+      setContainerHeight(clamped);
+      Animated.timing(translateY, {
+        toValue: SCREEN_HEIGHT - clamped,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  useEffect(() => {
+    if (!visible || !modalProps) return;
+    if (modalProps.maxHeight !== "auto") {
+      const height = typeof modalProps.maxHeight === "number"
+        ? Math.min(modalProps.maxHeight, SCREEN_HEIGHT)
+        : SCREEN_HEIGHT * 0.9;
+      setContainerHeight(height);
+      Animated.timing(translateY, {
+        toValue: SCREEN_HEIGHT - height,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible, modalProps, translateY]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -107,7 +121,7 @@ const GlobalSwipeModal: React.FC = () => {
           }).start();
         }
       },
-    })
+    }),
   ).current;
 
   if (!visible || !modalProps) return null;
@@ -116,19 +130,12 @@ const GlobalSwipeModal: React.FC = () => {
     children,
     closeOnBackdropPress = true,
     enableSwipeToClose = true,
-    maxHeight = "auto",
-    defaultHeight,
     bgColor = "#fff",
     showBar = true,
     barColor = "#ccc",
     headerComponent,
     footerComponent,
   } = modalProps;
-
-  const modalHeight =
-    typeof maxHeight === "number"
-      ? Math.min(maxHeight, SCREEN_HEIGHT)
-      : defaultHeight || SCREEN_HEIGHT * 0.9;
 
   return (
     <Modal visible={visible} transparent animationType="none">
@@ -137,12 +144,11 @@ const GlobalSwipeModal: React.FC = () => {
       >
         <View style={styles.backdrop} />
       </TouchableWithoutFeedback>
-
       <Animated.View
         style={[
           styles.container,
           {
-            height: modalHeight,
+            height: containerHeight,
             transform: [{ translateY }],
             backgroundColor: bgColor,
             borderTopLeftRadius: 16,
@@ -153,7 +159,7 @@ const GlobalSwipeModal: React.FC = () => {
         {...(enableSwipeToClose ? panResponder.panHandlers : {})}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.content}>
+          <View onLayout={handleLayout}>
             {showBar && (
               <View style={styles.barContainer}>
                 <View style={[styles.bar, { backgroundColor: barColor }]} />
@@ -179,9 +185,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
   },
-  content: {
-    flex: 1,
-  },
   barContainer: {
     height: 30,
     alignItems: "center",
@@ -193,7 +196,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   body: {
-    flex: 1,
     padding: 16,
   },
 });

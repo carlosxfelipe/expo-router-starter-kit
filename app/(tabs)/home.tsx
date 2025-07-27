@@ -21,6 +21,7 @@ export default function HomeScreen() {
       bgColor: isDarkMode ? "#1a1a1a" : "#fff",
       showBar: true,
       barColor: isDarkMode ? "#888" : "#ccc",
+      maxHeight: 650,
       headerComponent: (
         <ThemedText style={{ padding: 16 }}>Cabeçalho do Modal</ThemedText>
       ),
