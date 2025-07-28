@@ -6,6 +6,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Button } from "@/components/ui/Button";
 import { CarouselSnap } from "@/components/ui/CarouselSnap";
+import { LoadingButton } from "@/components/ui/LoadingButton";
 import { SearchBarHeader } from "@/components/ui/SearchBarHeader";
 import { images } from "@/data/images";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -74,6 +75,7 @@ export default function HomeScreen() {
             placement="top"
           />
           <Button title="Abrir global swipe modal" onPress={handleOpenModal} />
+          <LoadingButton style={{marginTop: 10}} />
         </View>
       </ThemedView>
     </MaxWidthLayout>
