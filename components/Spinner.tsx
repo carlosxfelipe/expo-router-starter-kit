@@ -5,20 +5,22 @@ import Svg, { Circle } from "react-native-svg";
 type SpinnerProps = {
   size?: number;
   color?: string;
-  reverse?: boolean; // sentido anti-horário
+  reverse?: boolean;
 };
 
-const Spinner = ({ size = 24, color = "#000", reverse = false }: SpinnerProps) => {
+const Spinner = (
+  { size = 24, color = "#000", reverse = false }: SpinnerProps,
+) => {
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.loop(
       Animated.timing(rotateAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
         easing: Easing.linear,
         useNativeDriver: true,
-      })
+      }),
     ).start();
   }, [rotateAnim]);
 
@@ -35,9 +37,10 @@ const Spinner = ({ size = 24, color = "#000", reverse = false }: SpinnerProps) =
           cy="12"
           r="10"
           stroke={color}
-          strokeWidth="4"
+          strokeWidth="4.5"
+          strokeLinecap="round"
           strokeDasharray="60"
-          strokeDashoffset="20"
+          strokeDashoffset="15"
           fill="none"
         />
       </Svg>
