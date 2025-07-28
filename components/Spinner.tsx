@@ -2,7 +2,13 @@ import { useEffect, useRef } from "react";
 import { Animated, Easing } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
-const Spinner = ({ size = 24, color = "#000" }) => {
+type SpinnerProps = {
+  size?: number;
+  color?: string;
+  reverse?: boolean; // sentido anti-horário
+};
+
+const Spinner = ({ size = 24, color = "#000", reverse = false }: SpinnerProps) => {
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -18,7 +24,7 @@ const Spinner = ({ size = 24, color = "#000" }) => {
 
   const spin = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
+    outputRange: reverse ? ["0deg", "-360deg"] : ["0deg", "360deg"],
   });
 
   return (

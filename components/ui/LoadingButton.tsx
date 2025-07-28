@@ -6,7 +6,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
-import CustomSpinner from "../CustomSpinner";
+import Spinner from "../Spinner";
 
 type LoadingButtonProps = TouchableOpacityProps & {
   size?: number;
@@ -41,7 +41,7 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
       ]}
       {...rest}
     >
-      <CustomSpinner size={size} color={spinnerColor} />
+      <Spinner size={size} color={spinnerColor} reverse />
     </TouchableOpacity>
   );
 };
