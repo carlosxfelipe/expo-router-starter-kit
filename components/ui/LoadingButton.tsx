@@ -41,7 +41,7 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
       ]}
       {...rest}
     >
-      <Spinner size={size} color={spinnerColor} reverse />
+      <Spinner size={size} color={spinnerColor} />
     </TouchableOpacity>
   );
 };
