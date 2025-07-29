@@ -1,22 +1,20 @@
 import { useEffect, useRef } from "react";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
-type SpinnerProps = {
+type Props = {
   size?: number;
   color?: string;
 };
 
-const Spinner = (
-  { size = 24, color = "#000" }: SpinnerProps,
-) => {
+const Spinner = ({ size = 24, color = "#6200ee" }: Props) => {
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.loop(
       Animated.timing(rotateAnim, {
         toValue: 1,
-        duration: 800,
+        duration: 1000,
         easing: Easing.linear,
         useNativeDriver: true,
       }),
@@ -28,22 +26,42 @@ const Spinner = (
     outputRange: ["0deg", "360deg"],
   });
 
+  const strokeWidth = size * (4 / 24);
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+
   return (
-    <Animated.View style={{ transform: [{ rotate: spin }] }}>
-      <Svg height={size} width={size} viewBox="0 0 24 24">
+    <View style={{ width: size, height: size }}>
+      <Svg width={size} height={size}>
+        {/* Trilha translúcida */}
         <Circle
-          cx="12"
-          cy="12"
-          r="10"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
           stroke={color}
-          strokeWidth={size * (4 / 24)}
-          strokeLinecap="round"
-          strokeDasharray="60"
-          strokeDashoffset="15"
+          strokeWidth={strokeWidth}
+          strokeOpacity={0.2}
           fill="none"
         />
+
+        {/* Arco rotativo */}
+        <Animated.View style={{ position: "absolute", transform: [{ rotate: spin }], width: size, height: size }}>
+          <Svg width={size} height={size}>
+            <Circle
+              cx={size / 2}
+              cy={size / 2}
+              r={radius}
+              stroke={color}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+              strokeDasharray={circumference * 0.75}
+              strokeDashoffset={circumference * 0.25}
+              fill="none"
+            />
+          </Svg>
+        </Animated.View>
       </Svg>
-    </Animated.View>
+    </View>
   );
 };
 
