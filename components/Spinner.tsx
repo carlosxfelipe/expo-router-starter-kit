@@ -43,24 +43,32 @@ const Spinner = ({ size = 24, color = "#6200ee" }: Props) => {
           strokeOpacity={0.2}
           fill="none"
         />
-
-        {/* Arco rotativo */}
-        <Animated.View style={{ position: "absolute", transform: [{ rotate: spin }], width: size, height: size }}>
-          <Svg width={size} height={size}>
-            <Circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke={color}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              strokeDasharray={circumference * 0.75}
-              strokeDashoffset={circumference * 0.25}
-              fill="none"
-            />
-          </Svg>
-        </Animated.View>
       </Svg>
+      {/* Arco rotativo */}
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: size,
+          height: size,
+          transform: [{ rotate: spin }],
+        }}
+      >
+        <Svg width={size} height={size}>
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={color}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            strokeDasharray={circumference * 0.75}
+            strokeDashoffset={circumference * 0.25}
+            fill="none"
+          />
+        </Svg>
+      </Animated.View>
     </View>
   );
 };
